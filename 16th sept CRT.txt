@@ -1,0 +1,247 @@
+Atlas atlas-104b3m-shard-0 [primary] aggex> use aggex
+|
+| // Optional: Start fresh
+|
+| db.students.drop()
+|
+| const departments = [
+|
+| "Computer Science", "Mechanical Engineering", "Civil Engineering", "Electrical Engineering", "Business Administration", "Design", "Biotechnology", "Mathematics", "Physics", "Economics"
+|
+| ]
+|
+| const programs = [
+|
+| "BTech", "MTech", "BBA", "BDes", "MSc"
+|
+| ]
+|
+| const cities = [
+|
+| "Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer", "Delhi", "Ahmedabad", "Indore", "Lucknow", "Chandigarh"
+|
+| ]
+|
+| const states = [
+|
+| "Rajasthan", "Delhi", "Gujarat", "Madhya Pradesh", "Uttar Pradesh", "Punjab"
+|
+| ]
+|
+| const modes = [
+|
+| "Regular", "Hybrid", "Online"
+|
+| ]
+|
+| const statuses = [
+|
+| "Active", "Completed", "Dropped", "On Hold", "Graduated"
+|
+| ]
+|
+| const scholarships = [
+|
+| "Merit", "Sports", "Need Based", "Research", "None"
+|
+| ]
+|
+| const grades = [
+|
+| "A+", "A", "B+", "B", "C", "D"
+|
+| ]
+|
+| const skills = [
+|
+| "Python", "Java", "C++", "UI/UX", "Data Analysis", "CAD", "Marketing", "Research", "Robotics", "Communication"
+|
+| ]
+|
+| let documents = []
+|
+| for (let i = 1; i <= 5000; i++) {
+|
+|   const department = departments[Math.floor(Math.random() * departments.length)]
+|
+|   const program = programs[Math.floor(Math.random() * programs.length)]
+|
+|   const city = cities[Math.floor(Math.random() * cities.length)]
+|
+|   const state = states[Math.floor(Math.random() * states.length)]
+|
+|   const mode = modes[Math.floor(Math.random() * modes.length)]
+|
+|   const status = statuses[Math.floor(Math.random() * statuses.length)]
+|
+|   const scholarship = scholarships[Math.floor(Math.random() * scholarships.length)]
+|
+|   const grade = grades[Math.floor(Math.random() * grades.length)]
+|
+|   const age = Math.floor(Math.random() * 8) + 18
+|
+|   const semester = Math.floor(Math.random() * 8) + 1
+|
+|   const marks = Math.floor(Math.random() * 51) + 50
+|
+|   const attendance = Number((Math.random() * 35 + 60).toFixed(1))
+|
+|   const fees = Math.floor(Math.random() * 180000) + 40000
+|
+|   const scholarshipAmount = scholarship === "None" ? 0 : Math.floor(fees * (Math.random() * 0.5 + 0.1))
+|
+|   const credits = Math.floor(Math.random() * 16) + 12
+|
+|   const selectedSkills = []
+|
+|   for (let j = 0; j < 2; j++) { selectedSkills.push(skills[Math.floor(Math.random() * skills.length)]) }
+|
+|   const student = {
+|
+|     studentId: "STU" + String(i).padStart(5, "0"),
+|
+|     studentName: "Student " + i,
+|
+|     department: department,
+|
+|     program: program,
+|
+|     semester: semester,
+|
+|     age: age,
+|
+|     marks: marks,
+|
+|     attendance: attendance,
+|
+|     credits: credits,
+|
+|     fees: fees,
+|
+|     scholarship: { type: scholarship, amount: scholarshipAmount },
+|
+|     city: city,
+|
+|     state: state,
+|
+|     mode: mode,
+|
+|     status: status,
+|
+|     grade: grade,
+|
+|     skills: selectedSkills,
+|
+|     faculty: {
+|
+|       facultyId: "FAC" + String(Math.floor(Math.random() * 200) + 1).padStart(3, "0"),
+|
+|       rating: Number((Math.random() * 4 + 1).toFixed(1))
+|
+|     },
+|
+|     enrolledAt: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1),
+|
+|     isHosteller: Math.random() > 0.5,
+|
+|     createdAt: new Date()
+|
+|   }
+|
+|   documents.push(student)
+|
+|   if (documents.length === 500) { db.students.insertMany(documents); documents = [] }
+|
+| }
+|
+| if (documents.length > 0) { db.students.insertMany(documents) }
+|
+| print("5000 student documents inserted successfully into students!")
+already on db aggex
+Atlas atlas-104b3m-shard-0 [primary] aggex> db.students.aggregate([
+|   { $match: { department: "Computer Science" } }
+| ])
+[
+  {
+    _id: ObjectId('6aaa9552bd2bfac3b6a3d0c9'),
+    studentId: 'STU001',
+    studentName: 'Aarav Sharma',
+    department: 'Computer Science',
+    program: 'BTech',
+    marks: 88,
+    attendance: 92,
+    city: 'Jaipur',
+    state: 'Rajasthan',
+    fees: 120000,
+    status: 'Active',
+    grade: 'A+',
+    skills: [ 'Python', 'Data Analysis' ]
+  }
+]
+Atlas atlas-104b3m-shard-0 [primary] aggex> db.students.aggregate([
+|   { $match: { marks: { $gt: 85 } } }
+| ])
+[
+  {
+    _id: ObjectId('6aaa9552bd2bfac3b6a3d0c9'),
+    studentId: 'STU001',
+    studentName: 'Aarav Sharma',
+    department: 'Computer Science',
+    program: 'BTech',
+    marks: 88,
+    attendance: 92,
+    city: 'Jaipur',
+    state: 'Rajasthan',
+    fees: 120000,
+    status: 'Active',
+    grade: 'A+',
+    skills: [ 'Python', 'Data Analysis' ]
+  },
+  {
+    _id: ObjectId('6aaa9552bd2bfac3b6a3d0ca'),
+    studentId: 'STU002',
+    studentName: 'Meera Gupta',
+    department: 'Design',
+    program: 'BDes',
+    marks: 91,
+    attendance: 89,
+    city: 'Jodhpur',
+    state: 'Rajasthan',
+    fees: 110000,
+    status: 'Active',
+    grade: 'A+',
+    skills: [ 'UI/UX', 'Research' ]
+  }
+]
+
+Atlas atlas-104b3m-shard-0 [primary] aggex> db.students.aggregate([
+|   { $project: {
+|       _id: 0,
+|       studentName: 1,
+|       fees: 1,
+|       scholarshipAmount: "$scholarship.amount",
+|       netFees: { $subtract: ["$fees", "$scholarship.amount"] }
+|   }}
+| ])
+[
+  { studentName: 'Aarav Sharma', fees: 120000, netFees: null },
+  { studentName: 'Meera Gupta', fees: 110000, netFees: null },
+  { studentName: 'Rohan Verma', fees: 135000, netFees: null }
+]
+Atlas atlas-104b3m-shard-0 [primary] aggex> db.students.aggregate([
+|   { $group: { _id: "$department", totalStudents: { $sum: 1 } } }
+| ])
+[
+  { _id: 'Computer Science', totalStudents: 1 },
+  { _id: 'Mechanical Engineering', totalStudents: 1 },
+  { _id: 'Design', totalStudents: 1 }
+]
+Atlas atlas-104b3m-shard-0 [primary] aggex> db.students.aggregate([
+|   { $group: { _id: "$department", totalCredits: { $sum: "$credits" } } }
+| ])
+[
+  { _id: 'Design', totalCredits: 0 },
+  { _id: 'Mechanical Engineering', totalCredits: 0 },
+  { _id: 'Computer Science', totalCredits: 0 }
+]
+Atlas atlas-104b3m-shard-0 [primary] aggex>
